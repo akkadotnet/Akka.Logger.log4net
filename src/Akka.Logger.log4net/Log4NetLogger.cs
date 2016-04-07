@@ -8,6 +8,7 @@
 using System;
 using Akka.Actor;
 using Akka.Event;
+using Akka.Dispatch;
 using log4net;
 
 namespace Akka.Logger.log4net
@@ -18,7 +19,7 @@ namespace Akka.Logger.log4net
     /// recognized: <see cref="Debug"/>, <see cref="Info"/>,
     /// <see cref="Warning"/> and <see cref="Error"/>.
     /// </summary>
-    public class Log4NetLogger : ReceiveActor
+    public class Log4NetLogger : ReceiveActor, IRequiresMessageQueue<ILoggerMessageQueueSemantics>
     {
         private readonly ILoggingAdapter _log = Context.GetLogger();
 
