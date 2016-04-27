@@ -30,8 +30,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Akka, Version=1.0.7.18, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Akka.1.0.7\lib\net45\Akka.dll</HintPath>
+    <Reference Include="Akka, Version=1.0.8.24, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Akka.1.0.8\lib\net45\Akka.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="log4net, Version=1.2.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
