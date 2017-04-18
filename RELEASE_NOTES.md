@@ -1,3 +1,8 @@
+#### 1.2.9 April 18 2017 ####
+
+Support for Akka 1.2.0
+Updated to Log4Net 2.0.8
+
 #### 1.1.1 Juli 16 2016 ####
 
 Support for Akka 1.1.1
