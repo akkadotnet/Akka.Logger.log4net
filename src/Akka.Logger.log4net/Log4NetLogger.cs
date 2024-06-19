@@ -4,12 +4,12 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using System;
 using Akka.Actor;
 using Akka.Event;
 using Akka.Dispatch;
 using log4net;
-using log4net.Config;
+using log4net.Core;
+using System.Runtime.CompilerServices;
 
 namespace Akka.Logger.log4net
 {
@@ -21,7 +21,7 @@ namespace Akka.Logger.log4net
     /// </summary>
     public class Log4NetLogger : ReceiveActor, IRequiresMessageQueue<ILoggerMessageQueueSemantics>
     {
-        private readonly ILoggingAdapter _log = Context.GetLogger();
+        private readonly ILoggingAdapter _log = Logging.GetLogger(Context.System.EventStream, "Log4NetLogger");
 
         private static void Log(LogEvent logEvent, Action<ILog> logStatement)
         {
@@ -33,15 +33,27 @@ namespace Akka.Logger.log4net
             logStatement(logger);
         }
 
+        private static void Handle(Error logEvent)
+            => Log(logEvent, logger => logger.ErrorFormat("{0}", logEvent.Message));
+
+        private static void Handle(Warning logEvent)
+            => Log(logEvent, logger => logger.WarnFormat("{0}", logEvent.Message));
+
+        private static void Handle(Info logEvent)
+            => Log(logEvent, logger => logger.InfoFormat("{0}", logEvent.Message));
+
+        private static void Handle(Debug logEvent)
+            => Log(logEvent, logger => logger.DebugFormat("{0}", logEvent.Message));
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Log4NetLogger"/> class.
         /// </summary>
         public Log4NetLogger()
         {
-            Receive<Error>(m => Log(m, logger => logger.Error(string.Format("{0}", m.Message), m.Cause)));
-            Receive<Warning>(m => Log(m, logger => logger.WarnFormat("{0}", m.Message)));
-            Receive<Info>(m => Log(m, logger => logger.InfoFormat("{0}", m.Message)));
-            Receive<Debug>(m => Log(m, logger => logger.DebugFormat("{0}", m.Message)));
+            Receive<Error>(Handle);
+            Receive<Warning>(Handle);
+            Receive<Info>(Handle);
+            Receive<Debug>(Handle);
             Receive<InitializeLogger>(m =>
             {
                 _log.Info("log4net started");
