@@ -1,4 +1,10 @@
-﻿using Akka.Event;
+﻿//-----------------------------------------------------------------------
+// <copyright file="Log4NetMessageFormatter.cs" company="Akka.NET Project">
+//     Copyright (C) 2013-2017 Akka.NET Project <https://github.com/AkkaNetContrib>
+// </copyright>
+//-----------------------------------------------------------------------
+
+using Akka.Event;
 
 namespace Akka.Logger.log4net
 {

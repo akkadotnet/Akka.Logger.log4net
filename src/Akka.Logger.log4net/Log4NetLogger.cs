@@ -9,7 +9,7 @@ using Akka.Event;
 using Akka.Dispatch;
 using log4net;
 using log4net.Core;
-using System.Runtime.CompilerServices;
+using System.Globalization;
 
 namespace Akka.Logger.log4net
 {
@@ -19,31 +19,87 @@ namespace Akka.Logger.log4net
     /// recognized: <see cref="Debug"/>, <see cref="Info"/>,
     /// <see cref="Warning"/> and <see cref="Error"/>.
     /// </summary>
-    public class Log4NetLogger : ReceiveActor, IRequiresMessageQueue<ILoggerMessageQueueSemantics>
+    public sealed class Log4NetLogger : ReceiveActor, IRequiresMessageQueue<ILoggerMessageQueueSemantics>
     {
-        private readonly ILoggingAdapter _log = Logging.GetLogger(Context.System.EventStream, "Log4NetLogger");
+        // Used when location information is not available.
+        internal const string NA = "?";
 
-        private static void Log(LogEvent logEvent, Action<ILog> logStatement)
+        private readonly ILoggingAdapter _log = Logging.GetLogger(
+            loggingBus: Context.System.EventStream,
+            logSourceObj: nameof(Log4NetLogger));
+
+        /// <summary>
+        /// Gets or sets the function that will be used to get the logger.
+        /// </summary>
+        /// <remarks>
+        /// This property is solely there to allow unit tests to set a different logger factory.
+        /// </remarks>
+        internal Func<LogEvent, ILogger> GetLogger { get; set; } = GetLoggerFromLogManager;
+
+        private void Log(Level level, LogEvent logEvent)
+        {
+            var logger = GetLogger(logEvent);
+            var logEventSenderPath = Context.Sender.Path;
+            var loggingEvent = CreateLoggingEvent(logger, level, logEvent, logEventSenderPath);
+            logger.Log(loggingEvent);
+        }
+
+        private static ILogger GetLoggerFromLogManager(LogEvent logEvent)
         {
 #if NET472
             var logger = LogManager.GetLogger(logEvent.LogClass.FullName);
 #else
             var logger = LogManager.GetLogger(logEvent.LogClass);
 #endif
-            logStatement(logger);
+            return logger.Logger;
         }
 
-        private static void Handle(Error logEvent)
-            => Log(logEvent, logger => logger.ErrorFormat("{0}", logEvent.Message));
+        internal static LoggingEvent CreateLoggingEvent(
+            ILogger logger, Level level, LogEvent logEvent, ActorPath logEventSenderPath)
+        {
+            var (message, properties) = logEvent.Message is Log4NetPayload log4NetPayload
+                ? (log4NetPayload.Message, log4NetPayload.Properties)
+                : (logEvent.Message, Log4NetPayload.Empty.Properties);
 
-        private static void Handle(Warning logEvent)
-            => Log(logEvent, logger => logger.WarnFormat("{0}", logEvent.Message));
+            var className = properties.GetDeclaringTypeName() ?? logEvent.LogClass.FullName;
+            
+            var methodName = properties.GetMethodName() ?? NA;
+            
+            var fileName = properties.GetFileName() ?? NA;
+            
+            var lineNumber = properties.GetLineNumber() ?? NA;
 
-        private static void Handle(Info logEvent)
-            => Log(logEvent, logger => logger.InfoFormat("{0}", logEvent.Message));
+            var logginEventData = new LoggingEventData
+            {
+                Level = level,
+                LoggerName = logEvent.LogClass.FullName,
+                TimeStampUtc = logEvent.Timestamp,
+                Message = message?.ToString(),
+                ThreadName = logEvent.Thread.ManagedThreadId.ToString(NumberFormatInfo.InvariantInfo),
+                ExceptionString = logEvent.Cause?.ToString(),
+                LocationInfo = new(className, methodName, fileName, lineNumber),
+                Properties = Properties.Create()
+                    .SetProperties(actorPath: logEventSenderPath, logSource: logEvent.LogSource)
+                    .SetProperties(properties.AsEnumerable()),
+            };
 
-        private static void Handle(Debug logEvent)
-            => Log(logEvent, logger => logger.DebugFormat("{0}", logEvent.Message));
+            return new(
+                callerStackBoundaryDeclaringType: logEvent.LogClass,
+                repository: logger.Repository,
+                data: logginEventData);
+        }
+
+        private void Handle(Error logEvent)
+            => Log(Level.Error, logEvent);
+
+        private void Handle(Warning logEvent)
+            => Log(Level.Warn, logEvent);
+
+        private void Handle(Info logEvent)
+            => Log(Level.Info, logEvent);
+
+        private void Handle(Debug logEvent)
+            => Log(Level.Debug, logEvent);
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Log4NetLogger"/> class.

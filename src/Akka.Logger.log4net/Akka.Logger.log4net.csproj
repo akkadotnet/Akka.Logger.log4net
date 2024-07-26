@@ -8,4 +8,10 @@
     <PackageReference Include="Akka" />
     <PackageReference Include="log4net" />
   </ItemGroup>
+
+  <ItemGroup>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+      <_Parameter1>Akka.Logger.log4net.Tests</_Parameter1>
+    </AssemblyAttribute>
+  </ItemGroup>
 </Project>

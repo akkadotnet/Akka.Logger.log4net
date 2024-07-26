@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+# Visual Studio Version 17
+VisualStudioVersion = 17.10.35013.160
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Akka.Logger.log4net", "Akka.Logger.log4net\Akka.Logger.log4net.csproj", "{8B57B754-24FC-4825-8A50-B9E3F919BB3A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Akka.Logger.log4net", "Akka.Logger.log4net\Akka.Logger.log4net.csproj", "{8B57B754-24FC-4825-8A50-B9E3F919BB3A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{828A76CC-8178-4470-B20B-DA78673D91C4}"
 	ProjectSection(SolutionItems) = preProject
@@ -32,6 +32,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scripts", "scripts", "{7343
 		..\scripts\getReleaseNotes.ps1 = ..\scripts\getReleaseNotes.ps1
 	EndProjectSection
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Akka.Logger.log4net.Tests", "Akka.Logger.log4net.Tests\Akka.Logger.log4net.Tests.csproj", "{F2BC0EB5-17AF-46A3-B0A9-935B1803504F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -42,6 +44,10 @@ Global
 		{8B57B754-24FC-4825-8A50-B9E3F919BB3A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8B57B754-24FC-4825-8A50-B9E3F919BB3A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8B57B754-24FC-4825-8A50-B9E3F919BB3A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F2BC0EB5-17AF-46A3-B0A9-935B1803504F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F2BC0EB5-17AF-46A3-B0A9-935B1803504F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F2BC0EB5-17AF-46A3-B0A9-935B1803504F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F2BC0EB5-17AF-46A3-B0A9-935B1803504F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -50,5 +56,8 @@ Global
 		{D27357E5-702C-4E85-95A1-969FDCF765A6} = {828A76CC-8178-4470-B20B-DA78673D91C4}
 		{7AD6435A-870C-4D7D-859D-9FF1C5C72C58} = {D27357E5-702C-4E85-95A1-969FDCF765A6}
 		{73437FA7-88B8-4F5E-95B4-EF09F65AF87E} = {828A76CC-8178-4470-B20B-DA78673D91C4}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F927F8DD-8EEC-49AB-BDD2-EC7CE44C3FF9}
 	EndGlobalSection
 EndGlobal
