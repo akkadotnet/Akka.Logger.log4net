@@ -2,10 +2,12 @@
   <PropertyGroup>
     <Copyright>Copyright © 2013-2024 Akka.NET Project</Copyright>
     <NoWarn>$(NoWarn);CS1591;NU1701;CA1707;</NoWarn>
-    <VersionPrefix>1.3.1</VersionPrefix>
+    <VersionPrefix>1.5.69</VersionPrefix>
     <Authors>Akka.NET Team</Authors>
     <PackageProjectUrl>https://github.com/akkadotnet/Akka.Logger.log4net</PackageProjectUrl>
-    <PackageReleaseNotes>Support for Akka 1.3.1</PackageReleaseNotes>
+    <PackageReleaseNotes>* Upgraded to [Akka.NET v1.5.69](https://github.com/akkadotnet/akka.net/releases/tag/1.5.69) ([#40](https://github.com/akkadotnet/Akka.Logger.log4net/pull/40))
+* Added Akka.Hosting integration demo project and automated integration tests for the log4net logger ([#38](https://github.com/akkadotnet/Akka.Logger.log4net/pull/38))
+* Updated README with documentation for configuring the log4net logger via Akka.Hosting ([#39](https://github.com/akkadotnet/Akka.Logger.log4net/pull/39))</PackageReleaseNotes>
     <PackageTags>akka;actors;actor model;Akka;concurrency;log4net</PackageTags>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
