@@ -73,6 +73,31 @@ To include custom properties in your logs, configure log4net like this:
 
 This setup ensures your logs include all the specified details, making them more informative and easier to navigate.
 
+## Configuration via Akka.Hosting
+
+Log4net can be registered as the Akka.NET logger through the `Akka.Hosting` integration. This approach provides a clean, modern way to wire up logging in hosted applications using dependency injection.
+
+Use the `ConfigureLoggers` method on your Akka configuration builder:
+
+```csharp
+using Akka.Hosting;
+using Akka.Logger.log4net;
+
+// builder is a HostApplicationBuilder / WebApplicationBuilder
+builder.Services.AddAkka("MySystem", configurationBuilder =>
+{
+    configurationBuilder.ConfigureLoggers(loggerConfigBuilder =>
+    {
+        loggerConfigBuilder.ClearLoggers();              // remove Akka's default console logger
+        loggerConfigBuilder.AddLogger<Log4NetLogger>();  // route Akka events into log4net
+    });
+});
+```
+
+Log4net appenders and the repository are configured as usual via `log4net.config` (using `XmlConfigurator`) or programmatically via the log4net API.
+
+For a complete runnable example, see `src/Examples/Akka.Logger.log4net.HostingDemo`.
+
 ### Conclusion
 
 The log4net integration enhances Akka.NET's logging by allowing for detailed contextual information in logs. This not only improves diagnostics but also aids in understanding the execution flow and context of log messages.
